@@ -10,6 +10,7 @@ FROM node:16-alpine
 WORKDIR /usr/src/app
 COPY package.json ./
 COPY package-lock.json ./
+COPY index.html ./
 COPY --from=appbuild /usr/src/app/build ./build
 COPY --from=appbuild /usr/src/app/node_modules ./node_modules
 EXPOSE 8080
