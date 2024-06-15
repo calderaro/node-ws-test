@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN npm install
-RUN npm run tsc
+RUN npm run build
 
 FROM node:16-alpine
 WORKDIR /usr/src/app
