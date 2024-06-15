@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+  </head>
+  <div class="box">
+    <button id="send">Send</button>
+    <div class="result"></div>
+  </div>
+
+  <style>
+    .box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+
+  <script>
+    const ws = new WebSocket("ws://localhost:3000");
+    ws.onopen = () => {
+      console.log("Connected to the server");
+    };
+
+    ws.onmessage = (message) => {
+      if (event.data instanceof Blob) {
+        reader = new FileReader();
+
+        reader.onload = () => {
+          document.querySelector(".result").innerText =
+            Date.now() - Number(reader.result) + " ms round trip time";
+        };
+
+        reader.readAsText(event.data);
+      } else {
+        console.log("Result: " + event.data);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log("Disconnected from the server");
+    };
+
+    ws.onerror = (error) => {
+      console.log("Error => ", error);
+    };
+
+    function sendMessage() {
+      ws.send(new Date().getTime().toString());
+    }
+
+    document.getElementById("send").addEventListener("click", sendMessage);
+  </script>
+</html>
